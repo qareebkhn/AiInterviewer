@@ -1,0 +1,163 @@
+html {
+	position: relative;
+	min-height: 100%;
+}
+
+body {
+	margin-bottom: 50px;
+	/* Margin bottom equal to footer height */
+}
+
+footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 50px;
+	/* Height of the footer */
+}
+
+.pointer {
+	cursor: pointer;
+	font-family: Arial, Helvetica, sans-serif;
+	color: rgba(106, 107, 111);
+	background-color: rgba(247, 248, 250);
+	font-size: 15px;
+}
+
+.pointer:hover {
+	background-color: rgba(219, 220, 224);
+	transition-duration: 0.4s;
+}
+
+.pointer:visited {
+	background-color: #414141;
+}
+
+.text-input {
+	color: rgba(106, 107, 111);
+}
+
+.job-description span {
+	font-family: Arial, Helvetica, sans-serif;
+	color: rgba(106, 107, 111);
+	float: right;
+}
+
+.gradient {
+	color: white;
+	background-image: linear-gradient(rgba(63, 97, 113), rgba(43, 59, 84),
+		rgba(71, 80, 104));
+	border: none;
+	font-size: 17px;
+}
+
+.type-answer span {
+	font-family: Arial, Helvetica, sans-serif;
+	color: rgba(106, 107, 111);
+	float: right;
+}
+
+.accordion-button.disabled {
+	pointer-events: none;
+	opacity: 0.65;
+	/* This makes the button look disabled */
+	background-color: #e9ecef;
+	/* Optional: changes the background color to indicate disabled state */
+	cursor: not-allowed;
+	/* Changes the cursor to indicate the button is not clickable */
+}
+
+/* Hide the file input element */
+input[type="file"] {
+	display: none;
+}
+
+/* Style the button */
+.file-chooser-btn {
+	display: inline-block;
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
+	color: #000;
+	background-color: #FEC601;
+	border: none;
+	border-radius: 4px;
+}
+
+.file-chooser-btn:hover {
+	background-color: #efbb00;
+}
+
+/* #upload_your_cv_cont, #job_description_cont , #question_list  */
+.hidden {
+	display: none;
+}
+
+.chip {
+	font-size: 1em;
+	padding: 8px 16px;
+	border-radius: 24px;
+	color: #6a6c70;
+	background-color: #f7f8fa;
+	transition: .3s ease;
+	cursor: pointer
+}
+
+.chip>input {
+	position: fixed;
+	opacity: 0
+}
+
+.chip.border {
+	border: 1px solid #c6c9cf
+}
+
+.chip.active {
+	color: #34bfa6;
+	border: 1px solid #34bfa6
+}
+
+.chip.active, .chip.active:hover {
+	background-color: #ebf9f6
+}
+
+.chip:hover {
+	background-color: #dadce0
+}
+
+.roles-chips {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+	width: 100%
+}
+
+.char-count {
+	color: #c6c9cf;
+	position: absolute;
+	bottom: 310px;
+	font-weight: 1000;
+	right: 186px;
+	background-color: #fff;
+	border: 1px solid #f7f8fa;
+	padding: 4px 8px;
+	border-radius: 8px;
+	font-size: .75rem
+}
+
+.text-input {
+	resize: none;
+	overflow-y: auto;
+	font-size: 16px;
+	font-weight: 300;
+	padding: 16px;
+	box-sizing: border-box;
+	font-family: inherit;
+	color: #6a6c70;
+	border-radius: 8px;
+	border: 1px solid #c6c9cf;
+	height: 400px;
+	width: 100%
+}
