@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function updateTextArea(description) {
 		textarea.value = description ? description : '';
+
 	}
 
 	function updateURL(role) {
@@ -65,7 +66,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 
-
 	// Handle initial load if URL contains a role
 	const urlParams = new URLSearchParams(window.location.search);
 	const role = urlParams.get('role');
@@ -74,9 +74,27 @@ document.addEventListener('DOMContentLoaded', function() {
 		if (matchingChip) {
 			matchingChip.checked = true;
 			updateTextArea(descriptions[role]);
+
 		}
 	}
 
+
+
+
+
+	document.addEventListener('DOMContentLoaded', () => {
+		const labels = document.querySelectorAll('.roles-chips label');
+
+		labels.forEach(label => {
+			label.addEventListener('click', () => {
+				// Remove active class from all labels
+				labels.forEach(lbl => lbl.classList.remove('active'));
+
+				// Add active class to the clicked label
+				label.classList.add('active');
+			});
+		});
+	});
 
 
 
@@ -199,36 +217,54 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-	document.addEventListener('DOMContentLoaded', () => {
-		const labels = document.querySelectorAll('.roles-chips label');
+});
+function submitForm(interviewType) {
+	// Get the value of the textarea
+	var jdValue = document.getElementById('job-description').value;
+	// Set the value of the hidden input field
+	document.getElementById('jd').value = jdValue;
+	// Set the value of the interview type
+	document.getElementById('interviewType').value = interviewType;
+	// Submit the form
+	document.getElementById('interviewForm').submit();
+}
 
-		labels.forEach(label => {
-			label.addEventListener('click', () => {
-				// Remove active class from all labels
-				labels.forEach(lbl => lbl.classList.remove('active'));
+document.addEventListener('DOMContentLoaded', function() {
+	const textarea = document.getElementById('job-description');
+	const charCountSpan = document.getElementById('char-count');
+	const maxChars = 5000;
 
-				// Add active class to the clicked label
-				label.classList.add('active');
-			});
-		});
-	});
-
-	document.addEventListener('DOMContentLoaded', function() {
-		const textarea = document.getElementById('job-description');
-		const charCountSpan = document.getElementById('char-count');
-		const maxChars = 5000;
-
-		function updateCharCount() {
-			const currentLength = textarea.value.length;
-			if (currentLength > maxChars) {
-				textarea.value = textarea.value.substring(0, maxChars); // Trim excess characters
-			}
-			charCountSpan.textContent = `${maxChars - textarea.value.length} characters remaining`;
+	function updateCharCount() {
+		const currentLength = textarea.value.length;
+		if (currentLength > maxChars) {
+			textarea.value = textarea.value.substring(0, maxChars); // Trim excess characters
 		}
+		charCountSpan.textContent = `${maxChars - textarea.value.length} chars left`;
+	}
 
-		textarea.addEventListener('input', updateCharCount);
+	textarea.addEventListener('input', updateCharCount);
 
-		// Initialize char count on page load
-		updateCharCount();
-	});
+	// Initialize char count on page load
+	updateCharCount();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+
+
+	const textareaAnswer = document.getElementById('answer');
+	const charCountSpanAnswer = document.getElementById('char-count-ans');
+	const maxCharsAnswer = 5000;
+
+	function updateCharCountAnswer() {
+		const currentLength = textareaAnswer.value.length;
+		if (currentLength > maxCharsAnswer) {
+			textareaAnswer.value = textareaAnswer.value.substring(0, maxCharsAnswer); // Trim excess characters
+		}
+		charCountSpanAnswer.textContent = `${maxCharsAnswer - textareaAnswer.value.length} chars left`;
+	}
+
+	textareaAnswer.addEventListener('input', updateCharCountAnswer);
+
+	// Initialize char count on page load
+	updateCharCountAnswer();
 });

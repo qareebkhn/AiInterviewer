@@ -6,14 +6,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI Interviewer - Questions List</title>
+<title>Questions List | AI Interviewer</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet"
 	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
 	crossorigin="anonymous">
-<link rel="stylesheet" href="/views/styles_for _main.css">
-<link rel="script" href="/views/script_for_main.js">
+<!-- <link rel="stylesheet" href="/views/styles_for _main.css"> -->
+<link rel="stylesheet" href="/CSS/styles_for_main.css">
+<script src="/scripts/script_for_jobDescription.js"></script>
 </head>
 
 
@@ -325,16 +326,18 @@
 				style="height: relative;">
 
 				<h2 class="accordion-header">
-					<form class="flex-column full-width container-fluid">
+					<form action="/currentQuestion" method="POST"
+						class="flex-column full-width container-fluid">
 						<div aria-live="polite"
 							class="flex-column px-5 py-4 question-section"
 							style="text-align: center;">
-							<h3 class="question-subheader fw-bold" tabindex="0">Can you
-								provide an example of a challenging software development project
-								you worked on and how you approached and overcame the
-								difficulties faced?</h3>
+							<h3 class="question-subheader fw-bold" tabindex="0">
+								<div id="question">
+									<p><%=session.getAttribute("currentQuestion")%></p>
+								</div>
+							</h3>
 						</div>
-						<div class="type-answer-containe py-3 ">
+						<!-- <div class="type-answer-containe py-3 ">
 							<div class="flex-column type-answer-inputs">
 								<div class="type-answer pointer">
 									<textarea class="text-input rounded p-2 container"
@@ -344,6 +347,18 @@
 									<span class="char-count" id="char-count">5000 chars left</span>
 								</div>
 							</div>
+						</div> -->
+						<div class="job-description-container py-4">
+							<div class="flex-column job-description-inputs">
+								<div class="job-description">
+									<textarea class="text-input rounded p-3 container fs-5"
+										id="answer" style="height: 336px;"
+										placeholder="Type your answer" maxlength="5000"
+										aria-label="Type your asnwer"></textarea>
+									<span id="char-count-ans" class="fs-6">char left</span>
+								</div>
+
+							</div>
 						</div>
 						<div
 							class="question-footer d-flex justify-content-sm-center thin-top-padding">
@@ -352,7 +367,7 @@
 								<div class="submit-retry">
 									<button
 										class="footer-btn modern-btn link-btn button-weight rounded-pill gradient px-3 mb-5 py-2"
-										type="submit" value="submit">Submit for AI feedback</button>
+										type="submit">Submit for AI feedback</button>
 								</div>
 							</div>
 						</div>

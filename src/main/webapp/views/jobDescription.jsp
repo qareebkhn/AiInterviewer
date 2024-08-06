@@ -5,13 +5,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI Interviewer - Job Description</title>
+<title>Job Description | AI Interviewer</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet"
 	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
 	crossorigin="anonymous">
-	<script src="/scripts/script_for_jobDescription.js"></script> 
+<script src="/scripts/script_for_jobDescription.js"></script>
 <!-- <script src="/views/script_for_jobDescription.js"></script> -->
 <link rel="stylesheet" href="/CSS/styles_for_main.css">
 
@@ -143,6 +143,42 @@
 	</div>
 
 
+	<!-- Interview type modal -->
+	<div class="modal fade" id="interviewTypeModal" tabindex="-1"
+		aria-labelledby="profileModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="profileModalLabel">Select
+						interview type</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+
+					<form id="interviewForm" action="/questions" method="post">
+						<!-- Hidden Field for Interview Type -->
+						<input type="hidden" id="interviewType" name="interviewType"
+							value="">
+						<!-- Hidden Field for Job Description -->
+						<input type="hidden" id="jd" name="jd" value="">
+
+						<div class="d-grid gap-2 col-6 mx-auto">
+							<!-- Buttons -->
+							<button class="btn btn-success my-3 btn-lg" type="button"
+								onclick="submitForm('Simple')">Simple</button>
+							<button class="btn btn-primary my-3 btn-lg" type="button"
+								onclick="submitForm('Moderate')">Moderate</button>
+							<button class="btn btn-warning my-3 mb-4 btn-lg" type="button"
+								onclick="submitForm('Difficult')">Difficult</button>
+						</div>
+					</form>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- Job Descripttion -->
 
 	<div id="job_description_cont" class="container-fluid my-4">
@@ -230,9 +266,8 @@
 							id="job-description" style="height: 336px;"
 							placeholder="Select a job role above or paste your own description here"
 							maxlength="5000"
-							aria-label="Select a job role above or paste your own description here"
-							aria-describedby="char-count"></textarea>
-						<span id="char-count" class="char-count">5000 chars left </span>
+							aria-label="Select a job role above or paste your own description here"></textarea>
+						<span id="char-count" class="char-count">char count</span>
 					</div>
 
 				</div>
@@ -242,19 +277,33 @@
 			<div class="question-footer">
 				<p class="sr-only" role="alert"></p>
 				<div class="flex-column">
-					<form action="/questionsList" method="POST">
-						<button type="submit" id="generate_questions_btn"
-							class="footer-btn modern-btn button-weight rounded-pill gradient px-3 mb-5 py-2">
-							Generate Questions
-							<svg width="17" height="25" viewBox="0 0 17 25" fill="none"
-								xmlns="http://www.w3.org/2000/svg" style="z-index: 1000">
+					<!-- <form action="/questionsList" method="POST"> -->
+					<!-- <button type="submit" id="generate_questions_btn"
+						class="footer-btn modern-btn button-weight rounded-pill gradient px-3 mb-5 py-2">
+						Generate Questions
+						<svg width="17" height="25" viewBox="0 0 17 25" fill="none"
+							xmlns="http://www.w3.org/2000/svg" style="z-index: 1000">
                             <path
-									d="M10.1203 16.5467L14.167 12.5L10.1203 8.45333M2.83366 12.5L14.0537 12.5"
-									stroke="white" stroke-width="1.5" stroke-miterlimit="10"
-									stroke-linecap="round" stroke-linejoin="round"></path>
+								d="M10.1203 16.5467L14.167 12.5L10.1203 8.45333M2.83366 12.5L14.0537 12.5"
+								stroke="white" stroke-width="1.5" stroke-miterlimit="10"
+								stroke-linecap="round" stroke-linejoin="round"></path>
                         </svg>
-						</button>
-					</form>
+					</button> -->
+					<button id="generate_questions_btn" data-bs-toggle="modal"
+						data-bs-target="#interviewTypeModal"
+						class="footer-btn modern-btn button-weight rounded-pill gradient px-3 mb-5 py-2">
+						Generate Questions
+						<svg width="17" height="25" viewBox="0 0 17 25" fill="none"
+							xmlns="http://www.w3.org/2000/svg" style="z-index: 1000">
+                            <path
+								d="M10.1203 16.5467L14.167 12.5L10.1203 8.45333M2.83366 12.5L14.0537 12.5"
+								stroke="white" stroke-width="1.5" stroke-miterlimit="10"
+								stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+					</button>
+
+
+					<!-- </form> -->
 				</div>
 			</div>
 		</div>

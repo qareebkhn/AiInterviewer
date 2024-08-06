@@ -161,3 +161,54 @@ input[type="file"] {
 	height: 400px;
 	width: 100%
 }
+
+
+.link-btn:hover,
+button:hover {
+    opacity: .8
+}
+.link-btn,
+button {
+    text-decoration: none;
+    cursor: pointer;
+    opacity: 1;
+    transition: transform .3s ease, opacity .3s ease !important
+}
+
+.link-btn.no-color {
+    color: #6a6c70;
+    font-size: 14px;
+    text-decoration: underline;
+    transition: color .3s ease, opacity .3s ease;
+    background: none;
+    border: none
+}
+
+.link-btn.no-color:focus-visible,
+.link-btn.no-color:hover {
+    color: #34bfa6
+}
+.destructive-btn {
+    background-color: #f9ebeb;
+    color: #bf3434;
+    font-weight: 400
+}
+
+.destructive-btn:visited {
+    color: #bf3434
+}
+.destructive-btn
+{
+    font-size: 1rem;
+    border-radius: 80px;
+    color: #fff;
+    background-color: #0f1838;
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer
+}
+
+.destructive-btn:disabled {
+    background-color: #f7f8fa;
+    color: #c6c9cf
+}
