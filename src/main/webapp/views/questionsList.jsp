@@ -6,7 +6,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Questions List | AI Interviewer</title>
+<title>Your Interview Session | AI Interviewer</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet"
@@ -299,7 +299,10 @@
 							stroke-linecap="round" stroke-linejoin="round"></path>
                     </svg>
 				</button>
-				<span>Question 1 </span>
+
+				<span>Question </span>
+				<%=session.getAttribute("currentQuestionIndex")%>
+
 				<button aria-label="Go to the next question" class="disabled"
 					disabled="">
 					<svg width="12" height="12" viewBox="0 0 9 9" fill="none"
@@ -326,7 +329,7 @@
 				style="height: relative;">
 
 				<h2 class="accordion-header">
-					<form action="/currentQuestion" method="POST"
+					<form action="/submitAnswer" method="POST"
 						class="flex-column full-width container-fluid">
 						<div aria-live="polite"
 							class="flex-column px-5 py-4 question-section"
@@ -352,7 +355,7 @@
 							<div class="flex-column job-description-inputs">
 								<div class="job-description">
 									<textarea class="text-input rounded p-3 container fs-5"
-										id="answer" style="height: 336px;"
+										id="answer" name="answer" style="height: 336px;"
 										placeholder="Type your answer" maxlength="5000"
 										aria-label="Type your asnwer"></textarea>
 									<span id="char-count-ans" class="fs-6">char left</span>
@@ -381,39 +384,29 @@
 			</div>
 			<div class="accordion-item">
 				<h2 class="accordion-header">
-					<button class="accordion-button collapsed disabled" type="button"
+					<button class="accordion-button collapsed " type="button"
 						data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo"
-						aria-expanded="false" aria-controls="flush-collapseTwo" disabled>
+						aria-expanded="false" aria-controls="flush-collapseTwo">
 						Feedback</button>
 				</h2>
 				<div id="flush-collapseTwo" class="accordion-collapse collapse"
 					data-bs-parent="#accordionFlushExample">
 					<div class="accordion-body">
-						Placeholder content for this accordion, which is intended to
-						demonstrate the
-						<code>.accordion-flush</code>
-						class. This is the second item's accordion body. Let's imagine
-						this being filled with some actual content.
+						<%=session.getAttribute("feedback")%>
 					</div>
 				</div>
 			</div>
 			<div class="accordion-item">
 				<h2 class="accordion-header">
-					<button class="accordion-button collapsed disabled" type="button"
+					<button class="accordion-button collapsed " type="button"
 						data-bs-toggle="collapse" data-bs-target="#flush-collapseThree"
-						aria-expanded="false" aria-controls="flush-collapseThree" disabled>
+						aria-expanded="false" aria-controls="flush-collapseThree" >
 						Sample Response</button>
 				</h2>
 				<div id="flush-collapseThree" class="accordion-collapse collapse"
 					data-bs-parent="#accordionFlushExample">
 					<div class="accordion-body">
-						Placeholder content for this accordion, which is intended to
-						demonstrate the
-						<code>.accordion-flush</code>
-						class. This is the third item's accordion body. Nothing more
-						exciting happening here in terms of content, but just filling up
-						the space to make it look, at least at first glance, a bit more
-						representative of how this would look in a real-world application.
+						<%=session.getAttribute("sampleResponse")%>
 					</div>
 				</div>
 			</div>

@@ -184,16 +184,16 @@ public class UserController {
 		System.out.println("Interview Type: " + interviewType);
 
 		String prompt = String.format(
-				"Based on the following CV text and job description, generate %d %s interview questions. The questions should be real-world, practical, and relevant to the job description. The response should only contain the numbered questions.\n\n"
+				"Based on the following CV text and job description, generate %d %s interview questions. The questions should be real-world, practical, and relevant to the job description. The response should contain the questions only, without numbering.\n\n"
 						+ "Interview Type: %s\nNumber of Questions: %d\nDifficulty Level: %s\n\n"
 						+ "CV Text:\n%s\n\nJob Description:\n%s\n\n"
 						+ "Please provide the questions in the following format:\n"
-						+ "1. [Question 1]\n2. [Question 2]\n...\n%d. [Question %d]\n\n" + "Note:\n"
+						+ "[Question 1]\n[Question 2]\n...\n[Question %d]\n\n" + "Note:\n"
 						+ "- For Easy interviews, generate simple questions that test basic knowledge and understanding.\n"
 						+ "- For Moderate interviews, generate real-world and practical questions that test intermediate knowledge and problem-solving skills.\n"
 						+ "- For Hard interviews, generate difficult, real-world and practical questions that test advanced knowledge, problem-solving skills, and in-depth understanding of the subject.",
 				numberOfQuestions, interviewType, interviewType, numberOfQuestions, interviewType, CVText, jd,
-				numberOfQuestions, numberOfQuestions);
+				numberOfQuestions);
 
 		// Construct the URL for the external endpoint based on the interview type and
 		// other data
@@ -241,11 +241,11 @@ public class UserController {
 		}
 
 		// Ensure the current index is within bounds
-		if (currentIndex >= quesList.size()) {
+		if (currentIndex > quesList.size()) {
 			model.addAttribute("error", "No more questions available");
 			return "noMoreQuestions";
 		}
-//		System.out.println(currentIndex + " cur index");
+		// System.out.println(currentIndex + " cur index");
 
 		// Get the current question
 		String currentQuestion = quesList.get(currentIndex);
@@ -255,7 +255,60 @@ public class UserController {
 
 		// Add the current question to the model
 		session.setAttribute("currentQuestion", currentQuestion);
-//		System.out.println(currentQuestion + " cur ques");
+		// System.out.println(currentQuestion + " cur ques");
+
+		return "questionsList";
+	}
+
+	@PostMapping("/submitAnswer")
+	public String submitAnswer(@RequestParam String answer, HttpServletRequest request, Model model) {
+		HttpSession session = request.getSession();
+
+		// Retrieve current question index
+		Integer currentIndex = (Integer) session.getAttribute("currentQuestionIndex");
+		List<String> quesList = (List<String>) session.getAttribute("response");
+
+		if (quesList == null || currentIndex == null || currentIndex >= quesList.size()) {
+			model.addAttribute("error", "Invalid question index or question list not found");
+			return "errorPage";
+		}
+
+		// Get the current question
+		String currentQuestion = quesList.get(currentIndex);
+
+		// Construct the payload to send to the API
+		String prompt = String.format(
+				"Generate feedback and a sample response for the given question and answer. Keep in mind that the feedback and the sample response should not be more than one paragraph each and should be concise.\n\n"
+						+ "Question: \"%s\"\n\n" + "Answer: \"%s\"\n\n" + "Feedback:\n"
+						+ "Provide a concise and constructive feedback for the given answer. Ensure it highlights the strengths and suggests improvements without exceeding one paragraph.\n\n"
+						+ "Sample Response:\n"
+						+ "Provide a well-crafted sample response to the given question that demonstrates the ideal way to answer it. Keep it relevant, clear, and within one paragraph.",
+				currentQuestion, answer);
+
+		// Construct the URL for the external endpoint
+		String url = "http://localhost:8080/bot/chat?prompt=" + prompt;
+
+		try {
+			// Make the call to the external endpoint
+			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+			String[] responseBody = response.getBody().split("");
+			String feedback = responseBody[0];
+			String sampleResponseString = responseBody[1];
+			System.out.println("\nAnswer" + answer);
+			// Process the feedback response
+			System.out.println("Feedback: " + responseBody[0] + "  Sample Response: " + responseBody[1]);
+			session.setAttribute("feedback", feedback);
+			session.setAttribute("sampleResponse", sampleResponseString);
+
+			getCurrentQuestion(request, model);
+//			// Update the current question index for the next question
+//			session.setAttribute("currentQuestionIndex", currentIndex + 1);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("error", "Failed to submit answer and get feedback");
+			return "redirect:/questionsList";
+		}
 
 		return "questionsList";
 	}
