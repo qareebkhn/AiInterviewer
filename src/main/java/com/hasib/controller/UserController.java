@@ -291,18 +291,21 @@ public class UserController {
 		try {
 			// Make the call to the external endpoint
 			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-			String[] responseBody = response.getBody().split("");
-			String feedback = responseBody[0];
-			String sampleResponseString = responseBody[1];
-			System.out.println("\nAnswer" + answer);
-			// Process the feedback response
-			System.out.println("Feedback: " + responseBody[0] + "  Sample Response: " + responseBody[1]);
-			session.setAttribute("feedback", feedback);
-			session.setAttribute("sampleResponse", sampleResponseString);
+			String responseBody = response.getBody();
+			String[] parts = responseBody.split("Sample Response:");
+			String feedback = parts[0].replace("Feedback:", "").trim();
+			String sampleResponse = parts[1].trim();
 
-			getCurrentQuestion(request, model);
-//			// Update the current question index for the next question
-//			session.setAttribute("currentQuestionIndex", currentIndex + 1);
+			System.out.println("Answer: " + answer);
+			// Process the feedback response
+			System.out.println("Feedback: " + feedback);
+			System.out.println("Sample Response: " + sampleResponse);
+
+			session.setAttribute("feedback", feedback);
+			session.setAttribute("sampleResponse", sampleResponse);
+
+			// Update the current question index for the next question
+//			getCurrentQuestion(request, model);
 
 		} catch (Exception e) {
 			e.printStackTrace();

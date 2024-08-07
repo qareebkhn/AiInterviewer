@@ -141,7 +141,7 @@
 		</div>
 	</div>
 
-	<script>
+	<!-- <script>
 		document.getElementById('editButton').addEventListener('click',
 				function() {
 					document.getElementById('username').disabled = false;
@@ -193,7 +193,7 @@
 							document.getElementById('editButton').disabled = false;
 							document.getElementById('deleteAccount').disabled = false;
 						});
-	</script>
+	</script> -->
 
 
 	<!-- navbar -->
@@ -262,7 +262,7 @@
  --%>
 
 	<!-- Questions List -->
-	<div class="container mb-5 py-5 border-bottom" id="question_list">
+	<div class="container mb-5 py-5 " id="question_list">
 		<!-- <div class="px-4 pt-5 my-9 text-center">
             <div class="col-lg-6 mx-auto">
                 <p class="lead fw-meduim  md-4 fs-4" style=" color: #3b3b3b;
@@ -323,14 +323,19 @@
 			</div>
 		</nav>
 		<!-- end of the navbar -->
-		<div class="accordion accordion-flush border rounded"
+
+
+
+
+
+		<!-- Questions List -->
+		<%-- <div class="accordion accordion-flush border rounded"
 			id="accordionFlushExample">
 			<div class="container-fluid mt-3 accordion-item"
 				style="height: relative;">
-
 				<h2 class="accordion-header">
-					<form action="/submitAnswer" method="POST"
-						class="flex-column full-width container-fluid">
+					<form class="flex-column full-width container-fluid"
+						action="/submitAnswer" method="POST" id="answerForm">
 						<div aria-live="polite"
 							class="flex-column px-5 py-4 question-section"
 							style="text-align: center;">
@@ -340,17 +345,171 @@
 								</div>
 							</h3>
 						</div>
-						<!-- <div class="type-answer-containe py-3 ">
-							<div class="flex-column type-answer-inputs">
-								<div class="type-answer pointer">
-									<textarea class="text-input rounded p-2 container"
-										placeholder="Type your answer" style="height: 336px;"
-										maxlength="5000" aria-label="Type your answer"
-										aria-describedby="char-count" required=""></textarea>
-									<span class="char-count" id="char-count">5000 chars left</span>
+						<div class="job-description-container py-4">
+							<div class="flex-column job-description-inputs">
+								<div class="job-description">
+									<textarea class="text-input rounded p-3 container fs-5"
+										id="answer" name="answer" style="height: 336px;"
+										placeholder="Type your answer" maxlength="5000"
+										aria-label="Type your answer"></textarea>
+									<span id="char-count-ans" class="fs-6">char left</span>
 								</div>
 							</div>
-						</div> -->
+						</div>
+						<div
+							class="question-footer d-flex justify-content-sm-center thin-top-padding">
+							<p class="sr-only" role="alert"></p>
+							<div class="flex-column">
+								<div class="submit-retry">
+									<button
+										class="footer-btn modern-btn link-btn button-weight rounded-pill gradient px-3 mb-5 py-2"
+										id="submitAnswerBtn" type="submit">Submit for AI
+										feedback</button>
+									<form action="/currentQuestion">
+										<button type="submit" id="nextQuestionBtn"
+											class="footer-btn modern-btn link-btn button-weight rounded-pill gradient px-3 mb-5 py-2 hide">Next
+											Question</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</form>
+
+				</h2>
+			</div>
+			<div class="accordion-item">
+				<h2 class="accordion-header">
+					<button class="accordion-button collapsed" type="button"
+						data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo"
+						aria-expanded="false" aria-controls="flush-collapseTwo">
+						Feedback</button>
+				</h2>
+				<div id="flush-collapseTwo" class="accordion-collapse collapse"
+					data-bs-parent="#accordionFlushExample">
+					<div class="accordion-body">
+						<%=session.getAttribute("feedback")%>
+					</div>
+				</div>
+			</div>
+			<div class="accordion-item">
+				<h2 class="accordion-header">
+					<button class="accordion-button collapsed" type="button"
+						data-bs-toggle="collapse" data-bs-target="#flush-collapseThree"
+						aria-expanded="false" aria-controls="flush-collapseThree">
+						Sample Response</button>
+				</h2>
+				<div id="flush-collapseThree" class="accordion-collapse collapse"
+					data-bs-parent="#accordionFlushExample">
+					<div class="accordion-body">
+						<%=session.getAttribute("sampleResponse")%>
+					</div>
+				</div>
+			</div>
+		</div> --%>
+		<!-- end of Questions List -->
+		<!-- Questions List -->
+		<div class="accordion accordion-flush border rounded "
+			id="accordionFlushExample">
+			<div class="container-fluid mt-3 accordion-item"
+				style="height: relative;">
+				<h2 class="accordion-header">
+					<div class="flex-column full-width container-fluid">
+						<div aria-live="polite"
+							class="flex-column px-5 py-4 question-section"
+							style="text-align: center;">
+							<h3 class="question-subheader fw-bold" tabindex="0">
+								<div id="question">
+									<p><%=session.getAttribute("currentQuestion")%></p>
+								</div>
+							</h3>
+						</div>
+						<div class="job-description-container py-4">
+							<div class="flex-column job-description-inputs">
+								<div class="job-description">
+									<textarea class="text-input rounded p-3 container fs-5"
+										id="answerText" name="answerText" style="height: 336px;"
+										placeholder="Type your answer" maxlength="5000"
+										aria-label="Type your answer"></textarea>
+									<span id="char-count-ans" class="fs-6">char left</span>
+								</div>
+							</div>
+						</div>
+						<div
+							class="question-footer d-flex justify-content-sm-center thin-top-padding">
+							<p class="sr-only" role="alert"></p>
+							<div class="flex-column">
+								<div class="submit-retry d-flex justify-content-sm-center">
+									<form id="answerForm" action="/submitAnswer" method="POST">
+										<!-- Hidden Field for Answer -->
+										<input type="hidden" id="answer" name="answer" value="">
+										<button
+											class="footer-btn modern-btn link-btn button-weight rounded-pill gradient px-3 mb-5 py-2"
+											id="submitAnswerBtn" type="button"
+											onclick="submitAnswerForm()">Submit for AI feedback</button>
+									</form>
+									<form action="/currentQuestion">
+										<button type="button" id="nextQuestionBtn"
+											style="display: none"
+											class="footer-btn modern-btn link-btn button-weight rounded-pill gradient px-3 mb-5 py-2 hide">Next
+											Question</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</h2>
+			</div>
+			<div class="accordion-item">
+				<h2 class="accordion-header">
+					<button class="accordion-button collapsed" type="button"
+						data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo"
+						aria-expanded="false" aria-controls="flush-collapseTwo">Feedback</button>
+				</h2>
+				<div id="flush-collapseTwo" class="accordion-collapse collapse"
+					data-bs-parent="#accordionFlushExample">
+					<div class="accordion-body">
+						<%=session.getAttribute("feedback")%>
+					</div>
+				</div>
+			</div>
+			<div class="accordion-item">
+				<h2 class="accordion-header">
+					<button class="accordion-button collapsed" type="button"
+						data-bs-toggle="collapse" data-bs-target="#flush-collapseThree"
+						aria-expanded="false" aria-controls="flush-collapseThree">Sample
+						Response</button>
+				</h2>
+				<div id="flush-collapseThree" class="accordion-collapse collapse"
+					data-bs-parent="#accordionFlushExample">
+					<div class="accordion-body">
+						<%=session.getAttribute("sampleResponse")%>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- end of Questions List -->
+
+
+		<!-- Questions List -->
+		<%-- <div class="accordion accordion-flush border rounded"
+			id="accordionFlushExample">
+			<div class="container-fluid mt-3 accordion-item"
+				style="height: relative;">
+
+				<h2 class="accordion-header">
+					<form class="flex-column full-width container-fluid"
+						action="/submitAnswer" method="POST" id="answerForm">
+
+						<div aria-live="polite"
+							class="flex-column px-5 py-4 question-section"
+							style="text-align: center;">
+							<h3 class="question-subheader fw-bold" tabindex="0">
+								<div id="question">
+									<p><%=session.getAttribute("currentQuestion")%></p>
+								</div>
+							</h3>
+						</div>
+
 						<div class="job-description-container py-4">
 							<div class="flex-column job-description-inputs">
 								<div class="job-description">
@@ -370,17 +529,16 @@
 								<div class="submit-retry">
 									<button
 										class="footer-btn modern-btn link-btn button-weight rounded-pill gradient px-3 mb-5 py-2"
-										type="submit">Submit for AI feedback</button>
+										id="submitAnswerBtn" type="submit">Submit for AI
+										feedback</button>
+									<button  type="button" id="nextQuestionBtn"
+										class="footer-btn modern-btn link-btn button-weight rounded-pill gradient px-3 mb-5 py-2 hide">Next
+										Question</button>
 								</div>
 							</div>
+
 						</div>
 					</form>
-					<!-- <div id="flush-collapseOne" class="accordion-collapse collapse"
-                        data-bs-parent="#accordionFlushExample">
-                        <div class="accordion-body">Placeholder content for this accordion, which is intended to
-                            demonstrate
-                            the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
-                    </div> -->
 			</div>
 			<div class="accordion-item">
 				<h2 class="accordion-header">
@@ -400,7 +558,7 @@
 				<h2 class="accordion-header">
 					<button class="accordion-button collapsed " type="button"
 						data-bs-toggle="collapse" data-bs-target="#flush-collapseThree"
-						aria-expanded="false" aria-controls="flush-collapseThree" >
+						aria-expanded="false" aria-controls="flush-collapseThree">
 						Sample Response</button>
 				</h2>
 				<div id="flush-collapseThree" class="accordion-collapse collapse"
@@ -413,46 +571,43 @@
 
 
 		</div>
-	</div>
-	<!-- end of Questions List -->
+	</div> --%>
+		<!-- end of Questions List -->
 
 
-
-
-	<!-- Footer -->
-	<footer id="footer"
-		class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-		<div class="col-md-4 d-flex align-items-center">
-			<a href="/"
-				class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1">
-				<svg class="bi" width="30" height="24">
+		<!-- Footer -->
+		<footer id="footer"
+			class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4">
+			<div class="col-md-4 d-flex align-items-center">
+				<a href="/"
+					class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1">
+					<svg class="bi" width="30" height="24">
                     <use xlink:href="#bootstrap"></use>
                 </svg>
-			</a> <span class="mb-3 mb-md-0 text-body-secondary">© 2024
-				Company, Inc</span>
-		</div>
+				</a> <span class="mb-3 mb-md-0 text-body-secondary">© 2024
+					Company, Inc</span>
+			</div>
 
-		<ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
-			<li class="ms-3"><a class="text-body-secondary" href="#"><svg
-						class="bi" width="24" height="24">
+			<ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+				<li class="ms-3"><a class="text-body-secondary" href="#"><svg
+							class="bi" width="24" height="24">
                         <use xlink:href="#twitter"></use>
                     </svg></a></li>
-			<li class="ms-3"><a class="text-body-secondary" href="#"><svg
-						class="bi" width="24" height="24">
+				<li class="ms-3"><a class="text-body-secondary" href="#"><svg
+							class="bi" width="24" height="24">
                         <use xlink:href="#instagram"></use>
                     </svg></a></li>
-			<li class="ms-3"><a class="text-body-secondary" href="#"><svg
-						class="bi" width="24" height="24">
+				<li class="ms-3"><a class="text-body-secondary" href="#"><svg
+							class="bi" width="24" height="24">
                         <use xlink:href="#facebook"></use>
                     </svg></a></li>
-		</ul>
+			</ul>
 
 
-	</footer>
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-		crossorigin="anonymous"></script>
-
+		</footer>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+			crossorigin="anonymous"></script>
 </body>
 </html>
