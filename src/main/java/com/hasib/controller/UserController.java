@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +43,7 @@ public class UserController {
 
 	@Autowired
 	private RestTemplate restTemplate;
+	List<String> ansList = new ArrayList<>();
 
 //	@ModelAttribute
 //	public void modelData(Model m) {
@@ -50,6 +52,7 @@ public class UserController {
 //	}
 
 	@GetMapping("getUsers")
+
 	public String getUsers(Model m) {
 		m.addAttribute("listOfUsers", repo.findAll());
 		return "result";
@@ -246,16 +249,18 @@ public class UserController {
 			return "noMoreQuestions";
 		}
 		// System.out.println(currentIndex + " cur index");
-
+		System.out.println("ccurrent index: inside /cur" + currentIndex);
 		// Get the current question
 		String currentQuestion = quesList.get(currentIndex);
 
 		// Update the current index for the next request
-		session.setAttribute("currentQuestionIndex", currentIndex + 1);
 
 		// Add the current question to the model
+		session.setAttribute("noq", currentIndex + 1);
 		session.setAttribute("currentQuestion", currentQuestion);
-		// System.out.println(currentQuestion + " cur ques");
+		session.removeAttribute("answer");
+		session.removeAttribute("feedback");
+		session.removeAttribute("sampleResponse");
 
 		return "questionsList";
 	}
@@ -267,8 +272,9 @@ public class UserController {
 		// Retrieve current question index
 		Integer currentIndex = (Integer) session.getAttribute("currentQuestionIndex");
 		List<String> quesList = (List<String>) session.getAttribute("response");
-
-		if (quesList == null || currentIndex == null || currentIndex >= quesList.size()) {
+		ansList.add(answer);
+		System.out.println("ccurrent index: inside /sub" + currentIndex);
+		if (quesList == null || currentIndex == null) {
 			model.addAttribute("error", "Invalid question index or question list not found");
 			return "errorPage";
 		}
@@ -295,22 +301,90 @@ public class UserController {
 			String[] parts = responseBody.split("Sample Response:");
 			String feedback = parts[0].replace("Feedback:", "").trim();
 			String sampleResponse = parts[1].trim();
-
+			if (currentIndex + 1 != quesList.size()) {
+				session.setAttribute("currentQuestionIndex", currentIndex + 1);
+			}
 			System.out.println("Answer: " + answer);
 			// Process the feedback response
 			System.out.println("Feedback: " + feedback);
 			System.out.println("Sample Response: " + sampleResponse);
-
+			session.setAttribute("answer", answer);
 			session.setAttribute("feedback", feedback);
 			session.setAttribute("sampleResponse", sampleResponse);
-
+			System.out.println(currentIndex);
 			// Update the current question index for the next question
-//			getCurrentQuestion(request, model);
+			if (currentIndex + 1 == quesList.size()) {
+				String cvText = (String) session.getAttribute("content");
+				String jd = (String) session.getAttribute("jobDescription");
+				submitInterviewData(quesList, ansList, cvText, jd, request, model);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("error", "Failed to submit answer and get feedback");
 			return "redirect:/questionsList";
+		}
+
+		return "questionsList";
+	}
+
+	@GetMapping("/interviewSummary")
+	public String submitInterviewData(List questionsList, List ListAnswersList, String cvText, String jd,
+			HttpServletRequest request, Model model) {
+		HttpSession session = request.getSession();
+//		// Retrieve the stored lists and text
+//		List<String> questionsList = (List<String>) session.getAttribute("response");
+//
+//		String cvText = (String) session.getAttribute("content");
+//		String jd = (String) session.getAttribute("jobDescription");
+
+		// Construct the prompt
+		StringBuilder questionsAnswers = new StringBuilder();
+		for (int i = 0; i < questionsList.size(); i++) {
+			questionsAnswers.append(String.format("**Question %d:** %s\n**Answer %d:** %s\n\n", i + 1,
+					questionsList.get(i), i + 1, ListAnswersList.get(i)));
+		}
+
+		String prompt = String.format(
+				"Please analyze the following interview data. The data includes a list of questions, the corresponding answers provided by the candidate, the candidate's CV text, and the job description. Perform the following analyses:\n\n"
+						+ "1. **Answers Analysis:**\n"
+						+ "   - **Answer Accuracy:** Assess if the answers provided are factually correct and accurate.\n"
+						+ "   - **Relevance to Question:** Evaluate whether the answer directly addresses the question asked.\n"
+						+ "   - **Depth and Insight:** Determine if the answer demonstrates depth of understanding and insight into the subject matter.\n"
+						+ "   - **Communication Skills:** Analyze the clarity, conciseness, and coherence of the answer.\n"
+						+ "   - **Alignment with Job Description (JD):** Check if the answer reflects the skills and experiences relevant to the job description.\n\n"
+						+ "2. **CV Text Analysis:**\n"
+						+ "   - **Relevance to JD:** Assess how well the candidate's CV aligns with the job description.\n"
+						+ "   - **Experience and Accomplishments:** Evaluate the significance and relevance of the candidate's past experiences and accomplishments.\n"
+						+ "   - **Skills and Expertise:** Determine if the CV highlights the skills and expertise required for the role.\n"
+						+ "   - **Consistency and Professionalism:** Check for consistency in the CV, ensuring it is well-organized, free of errors, and professionally presented.\n\n"
+						+ "3. **Job Description and CV Relevance:**\n"
+						+ "   - **Skill and Experience Alignment:** Determine if the skills, experiences, and qualifications required in the JD are aligned with the candidate's CV.\n"
+						+ "   - **Overall Match:** Evaluate the overall match between the candidate's CV and the job description, highlighting areas of strong alignment and potential gaps.\n\n"
+						+ "Interview Data:\n" + "- **Questions and Answers:**\n%s\n" + "- **CV Text:** %s\n"
+						+ "- **Job Description:** %s",
+				questionsAnswers.toString(), cvText, jd);
+
+		// Construct the payload
+		Map<String, String> payload = new HashMap<>();
+		payload.put("prompt", prompt);
+
+		// URL of the external API
+		String url = "http://localhost:8080/bot/chat?prompt=" + prompt;
+
+		try {
+			// Send POST request with payload
+			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+			String responseBodyResult = response.getBody();
+
+			// Handle the response as needed
+			System.out.println("Response from external endpoint: " + responseBodyResult);
+			session.setAttribute("responseResult", responseBodyResult);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.setAttribute("error", "Failed to submit interview data");
+			return "errorPage";
 		}
 
 		return "questionsList";

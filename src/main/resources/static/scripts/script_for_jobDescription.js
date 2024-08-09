@@ -152,7 +152,7 @@ function submitForm(interviewType) {
 document.addEventListener('DOMContentLoaded', function() {
 
 
-	const textareaAnswer = document.getElementById('answer');
+	const textareaAnswer = document.getElementById('answerText');
 	const charCountSpanAnswer = document.getElementById('char-count-ans');
 	const maxCharsAnswer = 5000;
 
@@ -180,6 +180,42 @@ function submitAnswerForm() {
 	// Submit the form
 	document.getElementById('answerForm').submit();
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+	const textarea = document.getElementById("answerText");
+	const submitBtn = document.getElementById("submitAnswerBtn");
+	const editBtn = document.getElementById("nextQuestionBtn");
+
+	textarea.disabled = false;
+
+	// Check local storage for state
+	if (localStorage.getItem('textareaDisabled') === 'true') {
+		textarea.disabled = true;
+		submitBtn.style.display = "none";
+		editBtn.style.display = "inline";
+	}
+
+	submitBtn.addEventListener("click", function() {
+		// Store state in local storage
+		localStorage.setItem('textareaDisabled', 'true');
+
+
+	});
+
+	editBtn.addEventListener("click", function() {
+		// Enable the textarea
+		textarea.disabled = false;
+
+		// Hide the edit button and show the submit button
+		editBtn.style.display = "none";
+		submitBtn.style.display = "inline";
+
+		// Clear the state in local storage
+		localStorage.setItem('textareaDisabled', 'false');
+	});
+
+});
+
 
 /*document.addEventListener('DOMContentLoaded', function() {
 	const businessAnalystDescription = "Job Title: Business Analyst\n\nRole Summary: We are looking for a Business Analyst to join our team. This role is perfect for those who are early in their careers and are eager to dive into analyzing business needs and delivering data-driven solutions.\n\nResponsibilities:\n- Work closely with business units and stakeholders to understand and analyze business requirements.\n- Translate business needs into functional specifications and system design plans.\n- Conduct thorough data analysis using a variety of techniques, ranging from simple data aggregation via statistical analysis to complex data mining.\n- Monitor project progress by tracking activity, resolving problems, publishing progress reports, and recommending actions.\n- Ensure solutions meet business needs and requirements.\n- Conduct meetings and presentations to share ideas and findings.\n\nRequirements:\n- Bachelor’s degree in Business, Information Systems, or a related field.\n- 0-3 years of experience in a business analysis or a related field.\n- Strong analytical skills with the ability to collect, organize, analyze, and disseminate significant amounts of information with attention to detail and accuracy.\n- Proficiency in data visualization and business intelligence tools like Tableau or PowerBI.\n- Excellent verbal and written communication skills.\n- Experience working with cross-functional teams.";

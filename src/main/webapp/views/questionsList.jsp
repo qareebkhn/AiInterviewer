@@ -262,7 +262,7 @@
  --%>
 
 	<!-- Questions List -->
-	<div class="container mb-5 py-5 " id="question_list">
+	<div class="container mb-3 py-3 " id="question_list">
 		<!-- <div class="px-4 pt-5 my-9 text-center">
             <div class="col-lg-6 mx-auto">
                 <p class="lead fw-meduim  md-4 fs-4" style=" color: #3b3b3b;
@@ -272,7 +272,8 @@
             </div>
         </div> -->
 		<nav
-			class="flex-space-between d-flex justify-content-md-start mb-5 nav-container"
+			class="flex-space-between d-flex justify-content-md-start mb-3
+			 nav-container"
 			aria-label="Current interview">
 			<button
 				aria-label="Return to the question generation step to start a new interview"
@@ -301,7 +302,7 @@
 				</button>
 
 				<span>Question </span>
-				<%=session.getAttribute("currentQuestionIndex")%>
+				<%=session.getAttribute("noq")%>
 
 				<button aria-label="Go to the next question" class="disabled"
 					disabled="">
@@ -429,8 +430,8 @@
 									<textarea class="text-input rounded p-3 container fs-5"
 										id="answerText" name="answerText" style="height: 336px;"
 										placeholder="Type your answer" maxlength="5000"
-										aria-label="Type your answer"></textarea>
-									<span id="char-count-ans" class="fs-6">char left</span>
+										aria-label="Type your answer"><%=(session.getAttribute("answer") == null ? "" : session.getAttribute("answer"))%></textarea>
+									<span id="char-count-ans" class="fs-6"></span>
 								</div>
 							</div>
 						</div>
@@ -448,9 +449,9 @@
 											onclick="submitAnswerForm()">Submit for AI feedback</button>
 									</form>
 									<form action="/currentQuestion">
-										<button type="button" id="nextQuestionBtn"
-											style="display: none"
-											class="footer-btn modern-btn link-btn button-weight rounded-pill gradient px-3 mb-5 py-2 hide">Next
+										<button type="submit" id="nextQuestionBtn"
+											style="display: none;"
+											class="footer-btn modern-btn link-btn button-weight rounded-pill gradient px-3 mb-5 py-2">Next
 											Question</button>
 									</form>
 								</div>
@@ -465,10 +466,10 @@
 						data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo"
 						aria-expanded="false" aria-controls="flush-collapseTwo">Feedback</button>
 				</h2>
-				<div id="flush-collapseTwo" class="accordion-collapse collapse"
+				<div id="flush-collapseTwo" class="accordion-collapse collapse show"
 					data-bs-parent="#accordionFlushExample">
 					<div class="accordion-body">
-						<%=session.getAttribute("feedback")%>
+						<%=session.getAttribute("feedback") == null ? "" : session.getAttribute("feedback")%>
 					</div>
 				</div>
 			</div>
@@ -479,10 +480,11 @@
 						aria-expanded="false" aria-controls="flush-collapseThree">Sample
 						Response</button>
 				</h2>
-				<div id="flush-collapseThree" class="accordion-collapse collapse"
+				<div id="flush-collapseThree"
+					class="accordion-collapse collapse show"
 					data-bs-parent="#accordionFlushExample">
 					<div class="accordion-body">
-						<%=session.getAttribute("sampleResponse")%>
+						<%=session.getAttribute("sampleResponse") == null ? "" : session.getAttribute("sampleResponse")%>
 					</div>
 				</div>
 			</div>
@@ -574,7 +576,10 @@
 	</div> --%>
 		<!-- end of Questions List -->
 
+		<div class="container">
+			<textarea id="myTextarea"><%=session.getAttribute("responseResult")%></textarea>
 
+		</div>
 		<!-- Footer -->
 		<footer id="footer"
 			class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4">
