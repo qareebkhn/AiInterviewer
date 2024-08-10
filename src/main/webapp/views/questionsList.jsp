@@ -293,8 +293,8 @@
 
 				<span>Question </span>
 				<%=session.getAttribute("noq")%>
-
-
+				<span> of </span>
+				<%=session.getAttribute("totalQuesNo")%>
 			</div>
 			<div class="btn-width-wrap border rounded-pill">
 				<form action="/interviewSummary" method="POST">
@@ -572,10 +572,6 @@
 	</div> --%>
 		<!-- end of Questions List -->
 
-		<div class="container">
-			<textarea id="myTextarea"><%=session.getAttribute("responseResult")%></textarea>
-
-		</div>
 		<!-- Footer -->
 		<footer id="footer"
 			class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4">

@@ -18,6 +18,16 @@
 
 <body>
 
+	<%
+	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+	response.setHeader("Pragma", "no-cache");
+	response.setHeader("Expires", "0");
+	if (session.getAttribute("username") == null) {
+		response.sendRedirect("/");
+		System.out.println(session.getAttribute("username"));
+	}
+	%>
+
 	<!-- navbar -->
 	<nav class="navbar navbar-expand-lg bg-body-tertiary">
 		<div class="container-fluid">
@@ -85,7 +95,7 @@
 			</nav>
 
 			<div class="flex-column question-box">
-				<textarea disabled class="full p-3"><%=session.getAttribute("responseResult")%></textarea>
+				<textarea readonly class="full p-4"><%=session.getAttribute("responseResult")%></textarea>
 
 				<div class="d-grid gap-2 col-6 mx-auto">
 					<button class="btn btn-primary my-2" type="button">Button</button>

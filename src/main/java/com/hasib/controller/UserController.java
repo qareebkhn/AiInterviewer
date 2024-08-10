@@ -63,10 +63,10 @@ public class UserController {
 		return "index";
 	}
 
-	@RequestMapping("/main")
-	public String main() {
-		return "main";
-	}
+//	@RequestMapping("/main")
+//	public String main() {
+//		return "main";
+//	}
 
 	@RequestMapping("/listOfInterview")
 	public String listOfInterview() {
@@ -347,7 +347,7 @@ public class UserController {
 
 		// Construct the prompt
 		StringBuilder questionsAnswers = new StringBuilder();
-		for (int i = 0; i < questionsList.size(); i++) {
+		for (int i = 0; i < ansList.size(); i++) {
 			questionsAnswers.append(String.format("**Question %d:** %s\n**Answer %d:** %s\n\n", i + 1,
 					questionsList.get(i), i + 1, ansList.get(i)));
 		}
