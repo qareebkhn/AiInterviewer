@@ -290,37 +290,17 @@
 				Question Generation
 			</button>
 			<div class="flex-space-between question-picker mx-auto">
-				<button aria-label="Go to the previous question" class="hidden"
-					disabled="">
-					<svg width="12" height="12" viewBox="0 0 9 9" fill="none"
-						xmlns="http://www.w3.org/2000/svg">
-                        <path
-							d="M5.50011 7.13999L3.32678 4.96665C3.07011 4.70999 3.07011 4.28999 3.32678 4.03332L5.50011 1.85999"
-							stroke="#6A6C70" stroke-width="1.5" stroke-miterlimit="10"
-							stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-				</button>
 
 				<span>Question </span>
 				<%=session.getAttribute("noq")%>
 
-				<button aria-label="Go to the next question" class="disabled"
-					disabled="">
-					<svg width="12" height="12" viewBox="0 0 9 9" fill="none"
-						xmlns="http://www.w3.org/2000/svg">
-                        <path
-							d="M3.47021 7.13999L5.64355 4.96665C5.90022 4.70999 5.90022 4.28999 5.64355 4.03332L3.47021 1.85999"
-							stroke="#6A6C70" stroke-width="1.5" stroke-miterlimit="10"
-							stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-				</button>
+
 			</div>
 			<div class="btn-width-wrap border rounded-pill">
-				<button
-					aria-label="End the interview and review a summary of your feedback"
-					aria-haspopup="dialog"
-					class="link-btn destructive-btn rounded-pill" disabled="">End
-					&amp; Review</button>
+				<form action="/interviewSummary" method="POST">
+					<button type="submit" class="link-btn destructive-btn rounded-pill"
+						id="endAndReview" disabled="">End &amp; Review</button>
+				</form>
 			</div>
 		</nav>
 		<!-- end of the navbar -->
@@ -454,12 +434,18 @@
 											class="footer-btn modern-btn link-btn button-weight rounded-pill gradient px-3 mb-5 py-2">Next
 											Question</button>
 									</form>
+									<form action="/interviewSummary" method="POST">
+										<button type="submit" id="interviewSummaryBtn"
+											class="footer-btn modern-btn link-btn button-weight rounded-pill gradient px-3 mb-5 py-2">Interview
+											Summary</button>
+									</form>
 								</div>
 							</div>
 						</div>
 					</div>
 				</h2>
 			</div>
+
 			<div class="accordion-item">
 				<h2 class="accordion-header">
 					<button class="accordion-button collapsed" type="button"
@@ -491,6 +477,16 @@
 		</div>
 		<!-- end of Questions List -->
 
+		<script>
+			// Assuming you're using a server-side language, replace the following with appropriate syntax
+			var noOfQues =
+		<%=(session.getAttribute("noq"))%>
+			;
+			var totalQues =
+		<%=session.getAttribute("totalQuesNo")%>
+			;
+			var button = document.getElementById('submitAnswerBtn'); // Replace 'yourButtonId' with the actual ID of your button
+		</script>
 
 		<!-- Questions List -->
 		<%-- <div class="accordion accordion-flush border rounded"

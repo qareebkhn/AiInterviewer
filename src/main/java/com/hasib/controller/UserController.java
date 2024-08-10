@@ -88,6 +88,11 @@ public class UserController {
 		return "questionsList";
 	}
 
+	@RequestMapping("/summary")
+	public String summary() {
+		return "summary";
+	}
+
 	@PostMapping(value = "addUser")
 	public String addUser(@ModelAttribute("a1") Users user) {
 		repo.save(user);
@@ -176,7 +181,7 @@ public class UserController {
 
 		HttpSession session = request.getSession();
 
-		Map<String, Integer> interviewTypeToQuestions = Map.of("Simple", 5, "Moderate", 7, "Difficult", 10);
+		Map<String, Integer> interviewTypeToQuestions = Map.of("Simple", 1, "Moderate", 7, "Difficult", 10);
 
 		String CVText = (String) session.getAttribute("content");
 		int numberOfQuestions = interviewTypeToQuestions.get(interviewType);
@@ -215,11 +220,12 @@ public class UserController {
 			List<String> quesList = new ArrayList<>(Arrays.asList(quesArray));
 
 			session.setAttribute("response", quesList);
-
+			session.setAttribute("totalQuesNo", quesList.size());
 			// Initialize the current question index
 			session.setAttribute("currentQuestionIndex", 0);
 
 			getCurrentQuestion(request, m);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			m.addAttribute("error", "Failed to generate questions");
@@ -314,9 +320,11 @@ public class UserController {
 			System.out.println(currentIndex);
 			// Update the current question index for the next question
 			if (currentIndex + 1 == quesList.size()) {
-				String cvText = (String) session.getAttribute("content");
-				String jd = (String) session.getAttribute("jobDescription");
-				submitInterviewData(quesList, ansList, cvText, jd, request, model);
+//				String cvText = (String) session.getAttribute("content");
+//				String jd = (String) session.getAttribute("jobDescription");
+				session.setAttribute("ansList", ansList);
+
+//				submitInterviewData(quesList, ansList, cvText, jd, request);
 			}
 
 		} catch (Exception e) {
@@ -328,40 +336,37 @@ public class UserController {
 		return "questionsList";
 	}
 
-	@GetMapping("/interviewSummary")
-	public String submitInterviewData(List questionsList, List ListAnswersList, String cvText, String jd,
-			HttpServletRequest request, Model model) {
+	@PostMapping("/interviewSummary")
+	public String submitInterviewData(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 //		// Retrieve the stored lists and text
-//		List<String> questionsList = (List<String>) session.getAttribute("response");
+		List<String> questionsList = (List<String>) session.getAttribute("response");
 //
-//		String cvText = (String) session.getAttribute("content");
-//		String jd = (String) session.getAttribute("jobDescription");
+		String cvText = (String) session.getAttribute("content");
+		String jd = (String) session.getAttribute("jobDescription");
 
 		// Construct the prompt
 		StringBuilder questionsAnswers = new StringBuilder();
 		for (int i = 0; i < questionsList.size(); i++) {
 			questionsAnswers.append(String.format("**Question %d:** %s\n**Answer %d:** %s\n\n", i + 1,
-					questionsList.get(i), i + 1, ListAnswersList.get(i)));
+					questionsList.get(i), i + 1, ansList.get(i)));
 		}
 
 		String prompt = String.format(
 				"Please analyze the following interview data. The data includes a list of questions, the corresponding answers provided by the candidate, the candidate's CV text, and the job description. Perform the following analyses:\n\n"
-						+ "1. **Answers Analysis:**\n"
-						+ "   - **Answer Accuracy:** Assess if the answers provided are factually correct and accurate.\n"
-						+ "   - **Relevance to Question:** Evaluate whether the answer directly addresses the question asked.\n"
-						+ "   - **Depth and Insight:** Determine if the answer demonstrates depth of understanding and insight into the subject matter.\n"
-						+ "   - **Communication Skills:** Analyze the clarity, conciseness, and coherence of the answer.\n"
-						+ "   - **Alignment with Job Description (JD):** Check if the answer reflects the skills and experiences relevant to the job description.\n\n"
-						+ "2. **CV Text Analysis:**\n"
-						+ "   - **Relevance to JD:** Assess how well the candidate's CV aligns with the job description.\n"
-						+ "   - **Experience and Accomplishments:** Evaluate the significance and relevance of the candidate's past experiences and accomplishments.\n"
-						+ "   - **Skills and Expertise:** Determine if the CV highlights the skills and expertise required for the role.\n"
-						+ "   - **Consistency and Professionalism:** Check for consistency in the CV, ensuring it is well-organized, free of errors, and professionally presented.\n\n"
-						+ "3. **Job Description and CV Relevance:**\n"
-						+ "   - **Skill and Experience Alignment:** Determine if the skills, experiences, and qualifications required in the JD are aligned with the candidate's CV.\n"
-						+ "   - **Overall Match:** Evaluate the overall match between the candidate's CV and the job description, highlighting areas of strong alignment and potential gaps.\n\n"
-						+ "Interview Data:\n" + "- **Questions and Answers:**\n%s\n" + "- **CV Text:** %s\n"
+						+ "1. **Answers Evaluation:**\n"
+						+ "   - Assess the accuracy, relevance, depth, and communication quality of the candidate's answers. Indicate if the answers align with the job description.\n"
+						+ "2. **CV Evaluation:**\n"
+						+ "   - Evaluate how well the candidate's CV aligns with the job description, focusing on experience, skills, and professionalism.\n"
+						+ "3. **JD-CV Relevance:**\n"
+						+ "   - Determine the overall alignment between the candidate's skills and experiences with the job requirements.\n\n"
+						+ "Provide a concise summary in the following format:\n\n"
+						+ "**Interview Analysis Summary:**\n\n" + "**Answers Evaluation:**\n"
+						+ "- [Insert summary of answers evaluation here]\n\n" + "**CV Evaluation:**\n"
+						+ "- [Insert summary of CV evaluation here]\n\n" + "**JD-CV Relevance:**\n"
+						+ "- [Insert summary of JD-CV relevance here]\n\n" + "**Overall Rating and Comment:**\n"
+						+ "- Provide an overall rating and a brief comment on the candidate’s suitability for the role."
+						+ "\n\nInterview Data:\n" + "- **Questions and Answers:**\n%s\n" + "- **CV Text:** %s\n"
 						+ "- **Job Description:** %s",
 				questionsAnswers.toString(), cvText, jd);
 
@@ -387,7 +392,7 @@ public class UserController {
 			return "errorPage";
 		}
 
-		return "questionsList";
+		return "redirect:/summary";
 	}
 
 //	@PostMapping("/logout")

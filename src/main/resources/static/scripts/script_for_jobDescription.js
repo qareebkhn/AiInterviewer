@@ -179,13 +179,14 @@ function submitAnswerForm() {
 
 	// Submit the form
 	document.getElementById('answerForm').submit();
+
 }
 
 document.addEventListener("DOMContentLoaded", function() {
 	const textarea = document.getElementById("answerText");
 	const submitBtn = document.getElementById("submitAnswerBtn");
 	const editBtn = document.getElementById("nextQuestionBtn");
-
+	const endAndReview = document.getElementById("endAndReview");
 	textarea.disabled = false;
 
 	// Check local storage for state
@@ -193,12 +194,17 @@ document.addEventListener("DOMContentLoaded", function() {
 		textarea.disabled = true;
 		submitBtn.style.display = "none";
 		editBtn.style.display = "inline";
+		endAndReview.disabled = false;
 	}
 
 	submitBtn.addEventListener("click", function() {
 		// Store state in local storage
 		localStorage.setItem('textareaDisabled', 'true');
-
+		if (noOfQues == totalQues) {
+			window.onload = function() {
+				toggleButtons();
+			};
+		}
 
 	});
 
@@ -211,10 +217,18 @@ document.addEventListener("DOMContentLoaded", function() {
 		submitBtn.style.display = "inline";
 
 		// Clear the state in local storage
-		localStorage.setItem('textareaDisabled', 'false');
-	});
 
+
+	});
+	localStorage.setItem('textareaDisabled', 'false');
 });
+function toggleButtons() {
+	var buttonToHide = document.getElementById('nextQuestionBtn');
+	var buttonToShow = document.getElementById('interviewSummaryBtn');
+	buttonToHide.style.display = 'none';
+	buttonToShow.style.display = 'block';
+}
+
 
 
 /*document.addEventListener('DOMContentLoaded', function() {
