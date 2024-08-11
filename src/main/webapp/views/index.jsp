@@ -646,11 +646,12 @@ document.getElementById('signupForm').addEventListener('submit', function(event)
 			<div class="col-lg-6">
 				<h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Introduction
 					to AI Interviewer</h1>
-				<p class="lead">Quickly design and customize responsive
-					mobile-first sites with Bootstrap, the world’s most popular
-					front-end open source toolkit, featuring Sass variables and mixins,
-					responsive grid system, extensive prebuilt components, and powerful
-					JavaScript plugins.</p>
+				<p class="lead">Efficiently manage and streamline your interview
+					process with our AI Interview platform. Leverage advanced AI
+					features to automate scheduling, analyze feedback in real-time, and
+					evaluate candidates seamlessly. Our application integrates a
+					user-friendly interface with powerful backend support, ensuring a
+					smooth and effective recruitment experience.</p>
 				<!-- <div class="d-grid gap-2 d-md-flex justify-content-md-start">
 					<button type="button" class="btn btn-outline-warning btn-lg px-4">Default</button>
 				</div> -->

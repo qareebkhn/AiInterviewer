@@ -88,21 +88,41 @@
 		</div>
 	</nav>
 	<main>
+
 		<div class="flex-column main-container max-width">
+
 			<nav class="flex-space-between nav-container"
 				aria-label="Current interview">
 				<div class="flex-space-between question-picker">Summary</div>
 			</nav>
 
 			<div class="flex-column question-box">
-				<textarea readonly class="full p-4"><%=session.getAttribute("responseResult")%></textarea>
+				<textarea name="interviewResult" id="interviewResult" readonly
+					class="full p-4"><%=session.getAttribute("responseResult")%></textarea>
 
-				<!-- <div class="d-grid gap-2 col-6 mx-auto">
-					<button class="btn btn-primary my-2" type="button">Button</button>
-					<button class="btn btn-primary" type="button">Button</button>
-				</div> -->
+
 			</div>
 		</div>
+		<div class="d-grid  col-3 mx-auto">
+			<form action="/addInterviewResult" method="POST">
+				<input type="hidden" id="intId" name="intId" value="1"> <input
+					type="hidden" id="role" name="role"
+					value="<%=session.getAttribute("role")%>"> <input
+					type="hidden" id="interviewType" name="interviewType"
+					value="<%=session.getAttribute("interviewType")%>"> <input
+					type="hidden" id="result" name="result"
+					value="<%=session.getAttribute("result")%>"> <input
+					type="hidden" id="score" name="score"
+					value="<%=session.getAttribute("score")%>"> <input
+					type="hidden" id="comment" name="comment"
+					value="<%=session.getAttribute("comment")%>">
+
+
+				<button class="btn btn-primary my-2" type="submit">Save
+					Interview Information</button>
+			</form>
+		</div>
+
 
 	</main>
 	<script

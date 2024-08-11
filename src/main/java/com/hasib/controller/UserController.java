@@ -30,7 +30,10 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hasib.entity.Users;
+import com.hasib.entity.interviewResult;
 import com.hasib.repository.UsersRepository;
+import com.hasib.repository.interviewResultRepository;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -42,6 +45,9 @@ public class UserController {
 	private UsersRepository repo;
 
 	@Autowired
+	private interviewResultRepository intRepo;
+
+	@Autowired
 	private RestTemplate restTemplate;
 	List<String> ansList = new ArrayList<>();
 
@@ -50,6 +56,20 @@ public class UserController {
 //		m.addAttribute("name", "Users");
 //
 //	}
+
+	@PostMapping(value = "addInterviewResult")
+	public String addInterviewResult(@ModelAttribute("a1") interviewResult intRes) {
+		intRepo.save(intRes);
+
+		return "/summary";
+	}
+
+	@PostMapping(value = "addUser")
+	public String addUser(@ModelAttribute("a1") Users user) {
+		repo.save(user);
+
+		return "index";
+	}
 
 	@GetMapping("getUsers")
 
@@ -91,13 +111,6 @@ public class UserController {
 	@RequestMapping("/summary")
 	public String summary() {
 		return "summary";
-	}
-
-	@PostMapping(value = "addUser")
-	public String addUser(@ModelAttribute("a1") Users user) {
-		repo.save(user);
-
-		return "index";
 	}
 
 	@PostMapping("/signin")
@@ -183,46 +196,6 @@ public class UserController {
 		}
 	}
 
-//	private String extractTextFromPDF(File file) throws IOException {
-//		try (PDDocument document = PDDocument.load(file)) {
-//			PDFTextStripper pdfStripper = new PDFTextStripper();
-//			String text = pdfStripper.getText(document);
-//			// Remove all characters except alphabetic, numeric, and spaces, and reduce
-//			// multiple spaces to one
-//			return text.replaceAll("[^a-zA-Z0-9 ]", "") // Remove non-alphanumeric characters
-//					.replaceAll("\\s+", " ") // Replace multiple spaces with a single space
-//					.trim(); // Remove leading and trailing spaces
-//		}
-//	}
-//
-//	private String extractTextFromDOCX(File file) throws IOException {
-//		try (FileInputStream fis = new FileInputStream(file);
-//				XWPFDocument document = new XWPFDocument(fis);
-//				XWPFWordExtractor extractor = new XWPFWordExtractor(document)) {
-//			String text = extractor.getText();
-//			// Remove all characters except alphabetic, numeric, and spaces, and reduce
-//			// multiple spaces to one
-//			return text.replaceAll("[^a-zA-Z0-9 ]", "") // Remove non-alphanumeric characters
-//					.replaceAll("\\s+", " ") // Replace multiple spaces with a single space
-//					.trim(); // Remove leading and trailing spaces
-//		}
-//	}
-
-//	private String extractTextFromPDF(File file) throws IOException {
-//		try (PDDocument document = PDDocument.load(file)) {
-//			PDFTextStripper pdfStripper = new PDFTextStripper();
-//			return pdfStripper.getText(document);
-//		}
-//	}
-//
-//	private String extractTextFromDOCX(File file) throws IOException {
-//		try (FileInputStream fis = new FileInputStream(file);
-//				XWPFDocument document = new XWPFDocument(fis);
-//				XWPFWordExtractor extractor = new XWPFWordExtractor(document)) {
-//			return extractor.getText();
-//		}
-//	}
-
 	@PostMapping("/questions")
 	public String generateQuestions(@RequestParam String interviewType, @RequestParam String jd,
 			HttpServletRequest request, Model m) {
@@ -230,7 +203,8 @@ public class UserController {
 		HttpSession session = request.getSession();
 
 		Map<String, Integer> interviewTypeToQuestions = Map.of("Simple", 1, "Moderate", 7, "Difficult", 10);
-
+		session.setAttribute("interviewType", interviewType);
+		session.setAttribute("jd", jd);
 		String CVText = (String) session.getAttribute("content");
 		int numberOfQuestions = interviewTypeToQuestions.get(interviewType);
 
@@ -389,39 +363,19 @@ public class UserController {
 		HttpSession session = request.getSession();
 //		// Retrieve the stored lists and text
 		List<String> questionsList = (List<String>) session.getAttribute("response");
-//
+//		
+		String interviewType = session.getAttribute("interviewType").toString();
 		String cvText = (String) session.getAttribute("content");
-		String jd = (String) session.getAttribute("jobDescription");
+		String jd = (String) session.getAttribute("jd");
 		System.out.println("ans size:" + ansList.size());
 		System.out.println("ques size:" + questionsList.size());
+		System.out.println(jd);
 		// Construct the prompt
 		StringBuilder questionsAnswers = new StringBuilder();
 		for (int i = 0; i < ansList.size(); i++) {
 			questionsAnswers.append(String.format("**Question %d:** %s\n**Answer %d:** %s\n\n", i + 1,
 					questionsList.get(i), i + 1, ansList.get(i)));
 		}
-		String prompt = String.format(
-				"Please analyze the following interview data. The data includes a list of questions, the corresponding answers provided by the candidate, the candidate's CV text, and the job description. Perform the following analyses:\n\n"
-						+ "1. **Answers Evaluation:**\n"
-						+ "   - Assess the accuracy, relevance, depth, and communication quality of the candidate's answers. Indicate if the answers align with the job description.\n"
-						+ "2. **CV Evaluation:**\n"
-						+ "   - Evaluate how well the candidate's CV aligns with the job description, focusing on experience, skills, and professionalism.\n"
-						+ "3. **JD-CV Relevance:**\n"
-						+ "   - Determine the overall alignment between the candidate's skills and experiences with the job requirements.\n\n"
-						+ "Provide a concise summary in the following format:\n\n"
-						+ "**Interview Analysis Summary:**\n\n" + "**Answers Evaluation:**\n"
-						+ "- [Insert summary of answers evaluation here]\n\n" + "**CV Evaluation:**\n"
-						+ "- [Insert summary of CV evaluation here]\n\n" + "**JD-CV Relevance:**\n"
-						+ "- [Insert summary of JD-CV relevance here]\n\n" + "**Overall Rating and Comment:**\n"
-						+ "- Provide an overall rating and a brief comment on the candidate’s suitability for the role."
-						+ "- [Overall Rating: n/10 - Status]. for example like this, [Overall Rating: 2.5/5 - Fair]."
-						+ "\n\n" + "Additionally, provide the following information at the end of your response:\n"
-						+ "- Role: [Insert Role here]\n" + "- Type of Interview: [Insert Type of Interview here]\n"
-						+ "- Status: [Insert Status here]\n" + "- Result: [Insert Result here]\n"
-						+ "- Comment: [Insert Comment here]\n" + "\n\nInterview Data:\n"
-						+ "- **Questions and Answers:**\n%s\n" + "- **CV Text:** %s\n" + "- **Job Description:** %s",
-				questionsAnswers.toString(), cvText, jd);
-
 //		String prompt = String.format(
 //				"Please analyze the following interview data. The data includes a list of questions, the corresponding answers provided by the candidate, the candidate's CV text, and the job description. Perform the following analyses:\n\n"
 //						+ "1. **Answers Evaluation:**\n"
@@ -435,12 +389,39 @@ public class UserController {
 //						+ "- [Insert summary of answers evaluation here]\n\n" + "**CV Evaluation:**\n"
 //						+ "- [Insert summary of CV evaluation here]\n\n" + "**JD-CV Relevance:**\n"
 //						+ "- [Insert summary of JD-CV relevance here]\n\n" + "**Overall Rating and Comment:**\n"
-//						+ "- Provide an overall rating and a brief comment on the candidate’s suitability for the role."
-//						+ "- [Overall Rating: n/10 - Status].."
-//						+ "\\n\\n"+ "**Suggestion:**\n- Provide some suggestion on the candidate’s answers to the question, CV imporovements and the what area to improve."
-//						+ "\n\nInterview Data:\n" + "- **Questions and Answers:**\n%s\n" + "- **CV Text:** %s\n"
-//						+ "- **Job Description:** %s",
-//				questionsAnswers.toString(), cvText, jd);
+//						+ "- Provide an overall rating and a brief comment on the candidate’s suitability for the role.\n"
+//						+ "- [Overall Rating: n/10 - Status]. For example: [Overall Rating: 2.5/10 - Fair].\n\n"
+//						+ "- add this text and continue: [END OF SUMMARY]\n\n" // Added marker for splitting
+//						+ "Additionally, at the end of your response, provide the following key-value pairs:\n"
+//						+ "1. Role: [Extract the role from the Job Description provided in the prompt with the title '**Job Description:**' and insert here]\n"
+//						+ "2. Result: [result]\n"
+//						+ "3. Score: [Provide a score from 1-10 based on the status, e.g., Poor, Good, Excellent, etc.]\n\n"
+//						+ "Interview Type: %s\n" + "Interview Data:\n" + "- **Questions and Answers:**\n%s\n"
+//						+ "- **CV Text:** %s\n" + "- **Job Description:** %s",
+//				interviewType, questionsAnswers.toString(), cvText, jd);
+
+		String prompt = String.format(
+				"Please analyze the following interview data. The data includes a list of questions, the corresponding answers provided by the candidate, the candidate's CV text, and the job description. Perform the following analyses:\n\n"
+						+ "1. **Answers Evaluation:**\n"
+						+ "   - Assess the accuracy, relevance, depth, and communication quality of the candidate's answers. Indicate if the answers align with the job description.\n"
+						+ "2. **CV Evaluation:**\n"
+						+ "   - Evaluate how well the candidate's CV aligns with the job description, focusing on experience, skills, and professionalism.\n"
+						+ "3. **JD-CV Relevance:**\n"
+						+ "   - Determine the overall alignment between the candidate's skills and experiences with the job requirements.\n\n"
+						+ "Provide a concise summary in the following format:\n\n"
+						+ "**Interview Analysis Summary:**\n\n" + "**Answers Evaluation:**\n"
+						+ "- [Insert summary of answers evaluation here]\n\n" + "**CV Evaluation:**\n"
+						+ "- [Insert summary of CV evaluation here]\n\n" + "**JD-CV Relevance:**\n"
+						+ "- [Insert summary of JD-CV relevance here]\n\n" + "**Overall Rating and Comment:**\n"
+						+ "- Provide an overall rating and a brief comment on the candidate’s suitability for the role.\n"
+						+ "- [Overall Rating: n/10 - Status]. For example: [Overall Rating: 2.5/10 - Fair].\n\n"
+						+ "Additionally, at the end of your response, provide the following key-value pairs:\n"
+						+ "1. Role: [Extract the role from the Job Description provided in the prompt with the title '**Job Description:**' and insert here]\n"
+						+ "2. Result: [result]\n"
+						+ "3. Score: [Provide a score from 1-10 based on the status, e.g., Poor, Good, Excellent, etc.]\n\n"
+						+ "Interview Type: %s\n" + "Interview Data:\n" + "- **Questions and Answers:**\n%s\n"
+						+ "- **CV Text:** %s\n" + "- **Job Description:** %s",
+				interviewType, questionsAnswers.toString(), cvText, jd);
 
 		// Construct the payload
 		Map<String, String> payload = new HashMap<>();
@@ -457,7 +438,8 @@ public class UserController {
 			// Handle the response as needed
 			System.out.println("Response from external endpoint: " + responseBodyResult);
 			session.setAttribute("responseResult", responseBodyResult);
-			session.removeAttribute("jobDescription");
+			saveInterview(request, responseBodyResult);
+			session.removeAttribute("jd");
 			session.removeAttribute("content");
 			session.removeAttribute("sampleResponse");
 			session.removeAttribute("feedback");
@@ -471,12 +453,77 @@ public class UserController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.setAttribute("error", "Failed to submit interview data");
+			session.removeAttribute("jd");
+			session.removeAttribute("content");
+			session.removeAttribute("sampleResponse");
+			session.removeAttribute("feedback");
+			session.removeAttribute("answer");
+			session.removeAttribute("currentQuestionIndex");
+			session.removeAttribute("noq");
+			session.removeAttribute("totalQuesNo");
+			session.removeAttribute("response");
+			ansList.clear();
 			return "errorPage";
 		}
 
 		return "redirect:/summary";
 	}
 
+	@PostMapping("/saveInterview")
+	public String saveInterview(HttpServletRequest request, @RequestParam String interviewResult) {
+		HttpSession session = request.getSession();
+//		String prompt = String
+//				.format("Extract the following information from the provided text in the format below:\n\n"
+//						+ "1. Role: [Extract the role from the text]\n"
+//						+ "2. Result: [Extract the result from the text]\n"
+//						+ "3. Score: [Extract the score from the text]\n"
+//						+ "4. Comment: [Provide a concise 3-word comment from the overall rating and comment section]\n\n"
+//						+ "Text:\n%s", interviewResult);
+		String prompt = String.format(
+				"Extract the following information from the provided text and return it as a list where each item is a separate list element:\n\n"
+						+ "1. Role: [Extract the role from the text]\n"
+						+ "2. Result: [Extract the result from the text]\n"
+						+ "3. Score: [Extract the score from the text]\n"
+						+ "4. Comment: [Provide a concise 3-word comment from the overall rating and comment section]\n\n"
+						+ "Return the response as a list with the following format:\n" + "- [Extracted role]\n"
+						+ "- [Extracted result]\n" + "- [Extracted score]\n" + "- [3-word comment]\n\n" + "Text:\n%s",
+				interviewResult);
+
+		String url = "http://localhost:8080/bot/chat?prompt=" + prompt;
+
+		try {
+			// Send POST request with payload
+			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+			String responseBodyResult = response.getBody();
+			System.out.println(responseBodyResult);
+			String[] items = responseBodyResult.split("\n");
+
+			// Create a list to store the items
+			List<String> list = new ArrayList<>();
+
+			// Add each item to the list
+			for (String item : items) {
+				// Remove leading '- ' and trim any extra whitespace
+				list.add(item.replaceFirst("- ", "").trim());
+			}
+
+			// Print the list to verify
+			System.out.println("List content:");
+			for (String entry : list) {
+				System.out.println(entry);
+			}
+			session.setAttribute("role", list.get(0));
+			session.setAttribute("result", list.get(1));
+			session.setAttribute("score", list.get(2));
+			session.setAttribute("comment", list.get(3));
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			return "errorPage";
+		}
+
+		return "/summary";
+	}
 //	@PostMapping("/logout")
 //	public String logout(HttpServletRequest req, HttpServletResponse res) {
 //
