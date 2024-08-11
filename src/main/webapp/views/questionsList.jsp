@@ -141,6 +141,11 @@
 		</div>
 	</div>
 
+	<!-- Hidden fields to store the number of questions and the current question number -->
+	<input type="hidden" id="totalQuestions"
+		value="<%=session.getAttribute("totalQuesNo")%>">
+	<input type="hidden" id="currentQuestion"
+		value="<%=session.getAttribute("noq")%>">
 	<!-- <script>
 		document.getElementById('editButton').addEventListener('click',
 				function() {
@@ -436,6 +441,7 @@
 									</form>
 									<form action="/interviewSummary" method="POST">
 										<button type="submit" id="interviewSummaryBtn"
+											style="display: none;"
 											class="footer-btn modern-btn link-btn button-weight rounded-pill gradient px-3 mb-5 py-2">Interview
 											Summary</button>
 									</form>
@@ -477,16 +483,7 @@
 		</div>
 		<!-- end of Questions List -->
 
-		<script>
-			// Assuming you're using a server-side language, replace the following with appropriate syntax
-			var noOfQues =
-		<%=(session.getAttribute("noq"))%>
-			;
-			var totalQues =
-		<%=session.getAttribute("totalQuesNo")%>
-			;
-			var button = document.getElementById('submitAnswerBtn'); // Replace 'yourButtonId' with the actual ID of your button
-		</script>
+
 
 		<!-- Questions List -->
 		<%-- <div class="accordion accordion-flush border rounded"

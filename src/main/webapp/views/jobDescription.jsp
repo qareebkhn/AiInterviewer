@@ -309,9 +309,10 @@
 		</div>
 
 	</div>
-	<div>
+	<!-- show CV Text -->
+	<%-- <div>
 		<p><%=session.getAttribute("content")%></p>
-	</div>
+	</div> --%>
 
 
 	<!-- Footer -->

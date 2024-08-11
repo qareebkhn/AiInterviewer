@@ -193,19 +193,27 @@ document.addEventListener("DOMContentLoaded", function() {
 	if (localStorage.getItem('textareaDisabled') === 'true') {
 		textarea.disabled = true;
 		submitBtn.style.display = "none";
-		editBtn.style.display = "inline";
 		endAndReview.disabled = false;
+		// Increment the current question number
+		var noq = document.getElementById("currentQuestion").value;
+
+		// Get the total number of questions
+		var totalQues = document.getElementById("totalQuestions").value;
+		
+		// Check if the current question is the last one
+		if (totalQues === noq) {
+			// Hide the Next Question button and show the Submit button
+			document.getElementById("submitAnswerBtn").style.display = "none";
+			document.getElementById("nextQuestionBtn").style.display = "none";
+			document.getElementById("interviewSummaryBtn").style.display = "inline";
+		} else {
+			editBtn.style.display = "inline";
+		}
 	}
 
 	submitBtn.addEventListener("click", function() {
 		// Store state in local storage
 		localStorage.setItem('textareaDisabled', 'true');
-		if (noOfQues == totalQues) {
-			window.onload = function() {
-				toggleButtons();
-			};
-		}
-
 	});
 
 	editBtn.addEventListener("click", function() {
@@ -222,12 +230,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	});
 	localStorage.setItem('textareaDisabled', 'false');
 });
-function toggleButtons() {
-	var buttonToHide = document.getElementById('nextQuestionBtn');
-	var buttonToShow = document.getElementById('interviewSummaryBtn');
-	buttonToHide.style.display = 'none';
-	buttonToShow.style.display = 'block';
-}
+
 
 
 

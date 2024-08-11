@@ -97,10 +97,10 @@
 			<div class="flex-column question-box">
 				<textarea readonly class="full p-4"><%=session.getAttribute("responseResult")%></textarea>
 
-				<div class="d-grid gap-2 col-6 mx-auto">
+				<!-- <div class="d-grid gap-2 col-6 mx-auto">
 					<button class="btn btn-primary my-2" type="button">Button</button>
 					<button class="btn btn-primary" type="button">Button</button>
-				</div>
+				</div> -->
 			</div>
 		</div>
 

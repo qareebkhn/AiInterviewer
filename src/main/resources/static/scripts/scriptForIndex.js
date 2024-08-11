@@ -1,14 +1,14 @@
 document.addEventListener("DOMContentLoaded", function() {
 	// Get the hidden field values
 	var isLoggedIn = document.getElementById("isLoggedIn").value;
-	
+
 
 	// Use these values in your logic
 	if (isLoggedIn === 'true') {
 		// Code to show the logged-in navbar
 		document.getElementById("loggedInNavbar").style.display = "block";
 		document.getElementById("loggedOutNavbar").style.display = "none";
-		
+
 	} else {
 		// Code to show the logged-out navbar
 		document.getElementById("loggedInNavbar").style.display = "none";
@@ -50,5 +50,4 @@ document.addEventListener("DOMContentLoaded", function() {
 	});
 
 });
-
 

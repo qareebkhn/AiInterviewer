@@ -344,14 +344,14 @@ public class UserController {
 //
 		String cvText = (String) session.getAttribute("content");
 		String jd = (String) session.getAttribute("jobDescription");
-
+		System.out.println("ans size:" + ansList.size());
+		System.out.println("ques size:" + questionsList.size());
 		// Construct the prompt
 		StringBuilder questionsAnswers = new StringBuilder();
 		for (int i = 0; i < ansList.size(); i++) {
 			questionsAnswers.append(String.format("**Question %d:** %s\n**Answer %d:** %s\n\n", i + 1,
 					questionsList.get(i), i + 1, ansList.get(i)));
 		}
-
 		String prompt = String.format(
 				"Please analyze the following interview data. The data includes a list of questions, the corresponding answers provided by the candidate, the candidate's CV text, and the job description. Perform the following analyses:\n\n"
 						+ "1. **Answers Evaluation:**\n"
@@ -366,9 +366,33 @@ public class UserController {
 						+ "- [Insert summary of CV evaluation here]\n\n" + "**JD-CV Relevance:**\n"
 						+ "- [Insert summary of JD-CV relevance here]\n\n" + "**Overall Rating and Comment:**\n"
 						+ "- Provide an overall rating and a brief comment on the candidate’s suitability for the role."
-						+ "\n\nInterview Data:\n" + "- **Questions and Answers:**\n%s\n" + "- **CV Text:** %s\n"
-						+ "- **Job Description:** %s",
+						+ "- [Overall Rating: n/10 - Status]. for example like this, [Overall Rating: 2.5/5 - Fair]."
+						+ "\n\n" + "Additionally, provide the following information at the end of your response:\n"
+						+ "- Role: [Insert Role here]\n" + "- Type of Interview: [Insert Type of Interview here]\n"
+						+ "- Status: [Insert Status here]\n" + "- Result: [Insert Result here]\n"
+						+ "- Comment: [Insert Comment here]\n" + "\n\nInterview Data:\n"
+						+ "- **Questions and Answers:**\n%s\n" + "- **CV Text:** %s\n" + "- **Job Description:** %s",
 				questionsAnswers.toString(), cvText, jd);
+
+//		String prompt = String.format(
+//				"Please analyze the following interview data. The data includes a list of questions, the corresponding answers provided by the candidate, the candidate's CV text, and the job description. Perform the following analyses:\n\n"
+//						+ "1. **Answers Evaluation:**\n"
+//						+ "   - Assess the accuracy, relevance, depth, and communication quality of the candidate's answers. Indicate if the answers align with the job description.\n"
+//						+ "2. **CV Evaluation:**\n"
+//						+ "   - Evaluate how well the candidate's CV aligns with the job description, focusing on experience, skills, and professionalism.\n"
+//						+ "3. **JD-CV Relevance:**\n"
+//						+ "   - Determine the overall alignment between the candidate's skills and experiences with the job requirements.\n\n"
+//						+ "Provide a concise summary in the following format:\n\n"
+//						+ "**Interview Analysis Summary:**\n\n" + "**Answers Evaluation:**\n"
+//						+ "- [Insert summary of answers evaluation here]\n\n" + "**CV Evaluation:**\n"
+//						+ "- [Insert summary of CV evaluation here]\n\n" + "**JD-CV Relevance:**\n"
+//						+ "- [Insert summary of JD-CV relevance here]\n\n" + "**Overall Rating and Comment:**\n"
+//						+ "- Provide an overall rating and a brief comment on the candidate’s suitability for the role."
+//						+ "- [Overall Rating: n/10 - Status].."
+//						+ "\\n\\n"+ "**Suggestion:**\n- Provide some suggestion on the candidate’s answers to the question, CV imporovements and the what area to improve."
+//						+ "\n\nInterview Data:\n" + "- **Questions and Answers:**\n%s\n" + "- **CV Text:** %s\n"
+//						+ "- **Job Description:** %s",
+//				questionsAnswers.toString(), cvText, jd);
 
 		// Construct the payload
 		Map<String, String> payload = new HashMap<>();
@@ -385,6 +409,16 @@ public class UserController {
 			// Handle the response as needed
 			System.out.println("Response from external endpoint: " + responseBodyResult);
 			session.setAttribute("responseResult", responseBodyResult);
+			session.removeAttribute("jobDescription");
+			session.removeAttribute("content");
+			session.removeAttribute("sampleResponse");
+			session.removeAttribute("feedback");
+			session.removeAttribute("answer");
+			session.removeAttribute("currentQuestionIndex");
+			session.removeAttribute("noq");
+			session.removeAttribute("totalQuesNo");
+			session.removeAttribute("response");
+			ansList.clear();
 
 		} catch (Exception e) {
 			e.printStackTrace();

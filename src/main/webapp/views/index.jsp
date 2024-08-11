@@ -153,8 +153,8 @@
 						</div>
 						<div class="mb-3" style="width: 70%; margin: 0 auto;">
 							<label for="password" class="form-label">Password</label> <input
-								type="password" class="form-control" id="password"
-								name="password" disabled>
+								type="password" class="form-control" id="passwordProfile"
+								name="passwordProfile" disabled>
 
 						</div>
 						<div class="d-flex justify-content-end"
