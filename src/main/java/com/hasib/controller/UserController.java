@@ -164,9 +164,8 @@ public class UserController {
 		try (PDDocument document = PDDocument.load(file)) {
 			PDFTextStripper pdfStripper = new PDFTextStripper();
 			String text = pdfStripper.getText(document);
-			// Remove all characters except alphabetic, numeric, and spaces, and reduce
-			// multiple spaces to one
-			return text.replaceAll("[^a-zA-Z0-9 ]", "") // Remove non-alphanumeric characters
+			// Keep alphabetic characters, numeric digits, and common punctuation
+			return text.replaceAll("[^a-zA-Z0-9.,?!:;\"'()\\[\\]{}\\- ]", "") // Allow common punctuation
 					.replaceAll("\\s+", " ") // Replace multiple spaces with a single space
 					.trim(); // Remove leading and trailing spaces
 		}
@@ -177,13 +176,37 @@ public class UserController {
 				XWPFDocument document = new XWPFDocument(fis);
 				XWPFWordExtractor extractor = new XWPFWordExtractor(document)) {
 			String text = extractor.getText();
-			// Remove all characters except alphabetic, numeric, and spaces, and reduce
-			// multiple spaces to one
-			return text.replaceAll("[^a-zA-Z0-9 ]", "") // Remove non-alphanumeric characters
+			// Keep alphabetic characters, numeric digits, and common punctuation
+			return text.replaceAll("[^a-zA-Z0-9.,?!:;\"'()\\[\\]{}\\- ]", "") // Allow common punctuation
 					.replaceAll("\\s+", " ") // Replace multiple spaces with a single space
 					.trim(); // Remove leading and trailing spaces
 		}
 	}
+
+//	private String extractTextFromPDF(File file) throws IOException {
+//		try (PDDocument document = PDDocument.load(file)) {
+//			PDFTextStripper pdfStripper = new PDFTextStripper();
+//			String text = pdfStripper.getText(document);
+//			// Remove all characters except alphabetic, numeric, and spaces, and reduce
+//			// multiple spaces to one
+//			return text.replaceAll("[^a-zA-Z0-9 ]", "") // Remove non-alphanumeric characters
+//					.replaceAll("\\s+", " ") // Replace multiple spaces with a single space
+//					.trim(); // Remove leading and trailing spaces
+//		}
+//	}
+//
+//	private String extractTextFromDOCX(File file) throws IOException {
+//		try (FileInputStream fis = new FileInputStream(file);
+//				XWPFDocument document = new XWPFDocument(fis);
+//				XWPFWordExtractor extractor = new XWPFWordExtractor(document)) {
+//			String text = extractor.getText();
+//			// Remove all characters except alphabetic, numeric, and spaces, and reduce
+//			// multiple spaces to one
+//			return text.replaceAll("[^a-zA-Z0-9 ]", "") // Remove non-alphanumeric characters
+//					.replaceAll("\\s+", " ") // Replace multiple spaces with a single space
+//					.trim(); // Remove leading and trailing spaces
+//		}
+//	}
 
 //	private String extractTextFromPDF(File file) throws IOException {
 //		try (PDDocument document = PDDocument.load(file)) {
