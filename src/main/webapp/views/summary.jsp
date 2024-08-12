@@ -105,7 +105,8 @@
 		</div>
 		<div class="d-grid  col-3 mx-auto">
 			<form action="/addInterviewResult" method="POST">
-				<input type="hidden" id="intId" name="intId" value="1"> <input
+				<!-- <input type="hidden" id="intId" name="intId" value="1"> -->
+				<input 
 					type="hidden" id="role" name="role"
 					value="<%=session.getAttribute("role")%>"> <input
 					type="hidden" id="interviewType" name="interviewType"
@@ -115,7 +116,9 @@
 					type="hidden" id="score" name="score"
 					value="<%=session.getAttribute("score")%>"> <input
 					type="hidden" id="comment" name="comment"
-					value="<%=session.getAttribute("comment")%>">
+					value="<%=session.getAttribute("comment")%>"> <input
+					type="hidden" id="uid" name="uid"
+					value="<%=session.getAttribute("uid")%>">
 
 
 				<button class="btn btn-primary my-2" type="submit">Save

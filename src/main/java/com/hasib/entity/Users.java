@@ -3,6 +3,7 @@ package com.hasib.entity;
 import jakarta.annotation.Generated;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -10,6 +11,7 @@ import jakarta.persistence.Table;
 public class Users {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int uid;
 	private String username;
 	private String email;

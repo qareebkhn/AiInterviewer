@@ -305,11 +305,11 @@ document.getElementById('signinForm').addEventListener('submit', function(event)
 				</div>
 				<div class="modal-body">
 					<form id="signupForm" action="addUser" method="POST">
-						<div class="mb-3">
+						<!-- <div class="mb-3">
 							<label for="uid" class="form-label">User ID</label> <input
 								type="text" class="form-control" id="uid" name="uid"
 								placeholder="user id" required>
-						</div>
+						</div> -->
 						<div class="mb-3">
 							<label for="username" class="form-label">Name</label> <input
 								type="text" class="form-control" id="username" name="username"

@@ -124,7 +124,7 @@ public class UserController {
 //			System.out.println(user.getPassword());	
 			HttpSession session = request.getSession();
 			session.setAttribute("username", user.getUsername());
-
+			session.setAttribute("uid", user.getUid());
 			return "redirect:/listOfInterview";
 		} else {
 			System.out.println("Invalid Username or Password");
