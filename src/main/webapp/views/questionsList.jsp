@@ -416,7 +416,7 @@
 										id="answerText" name="answerText" style="height: 336px;"
 										placeholder="Type your answer" maxlength="5000"
 										aria-label="Type your answer"><%=(session.getAttribute("answer") == null ? "" : session.getAttribute("answer"))%></textarea>
-									<span id="char-count-ans" class="fs-6"></span>
+									<!-- <span id="char-count-ans" class="fs-6"></span> -->
 								</div>
 							</div>
 						</div>

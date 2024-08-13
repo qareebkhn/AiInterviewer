@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -71,22 +72,30 @@ public class UserController {
 		return "index";
 	}
 
-	@GetMapping("getUsers")
+//	@GetMapping("getUsers")
+//	public String getUsers(Model m) {
+//		m.addAttribute("listOfUsers", repo.findAll());
+//		return "result";
+//	}
 
-	public String getUsers(Model m) {
-		m.addAttribute("listOfUsers", repo.findAll());
-		return "result";
-	}
+	 @PostMapping("/get-interview-results")
+	    public String getInterviewResultsByUid(@RequestParam("uid") int uid, HttpSession session, Model model) {
+	        // Fetch the interview results based on uid
+	        List<interviewResult> results = intRepo.findAllByUid(uid);
+	        
+	        // Store the results in the session
+	        session.setAttribute("interviewResults", results);
+	        
+	        model.addAttribute("interviewResults", results);
+	        
+	        // Redirect to a view or another endpoint if needed
+	        return "/listOfInterview";
+	    }
 
 	@RequestMapping("/")
 	public String showPage() {
 		return "index";
 	}
-
-//	@RequestMapping("/main")
-//	public String main() {
-//		return "main";
-//	}
 
 	@RequestMapping("/listOfInterview")
 	public String listOfInterview() {

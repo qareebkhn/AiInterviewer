@@ -267,7 +267,7 @@
 							placeholder="Select a job role above or paste your own description here"
 							maxlength="5000"
 							aria-label="Select a job role above or paste your own description here"></textarea>
-						<span id="char-count" class="char-count">char count</span>
+						<!-- <span id="char-count" class="char-count">char count</span> -->
 					</div>
 
 				</div>

@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8" isELIgnored="false"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -87,9 +87,13 @@
 			</div>
 		</div>
 	</nav>
-
-
-
+	<%-- <form action="/get-interview-results" method="POST">
+		<input id="uid" name="uid" type="text"
+			value="<%=session.getAttribute("uid")%>">
+		<button type="submit">Show all interview result</button>
+	</form>
+	<p><%=session.getAttribute("interviewResults")%></p>
+	 --%>
 	<!-- Profile Modal -->
 	<div class="modal fade" id="profileModal" tabindex="-1"
 		aria-labelledby="profileModalLabel" aria-hidden="true">
@@ -243,8 +247,36 @@
 
 
 
-	<!-- List of Interview -->
+
 	<div id="list_of_interviews" class="container-fluid p-5 ">
+		<table class="table table-striped table-hover border">
+			<div class="h4 pb-2 mb-4 text-dark border-bottom border-dark">
+				List of Interviews</div>
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Role</th>
+					<th scope="col">Type of Interview</th>
+					<th scope="col">Status</th>
+					<th scope="col">Result</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- Thymeleaf iteration over interviewResults list -->
+				<tr th:each="result, stat : ${interviewResults}">
+					<th scope="row" th:text="${stat.count}"></th>
+					<td th:text="${result.role}"></td>
+					<td th:text="${result.interviewType}"></td>
+					<td th:text="${result.comment}"></td>
+					<td th:text="${result.result}"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+
+	<!-- List of Interview -->
+	<!-- <div id="list_of_interviews" class="container-fluid p-5 ">
 
 		<table class="table table-striped table-hover border ">
 			<div class="h4 pb-2 mb-4 text-darj border-bottom border-dark">
@@ -313,7 +345,7 @@
 
 			</tbody>
 		</table>
-	</div>
+	</div> -->
 
 
 
