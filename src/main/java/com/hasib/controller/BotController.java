@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import com.hasib.dto.ChatGPTRequest;
 import com.hasib.dto.ChatGPTResponse;
 
+//Controller class for handling bot-related API requests.
 @RestController
 @RequestMapping("/bot")
 public class BotController {
@@ -24,6 +25,7 @@ public class BotController {
 	@Autowired
 	private RestTemplate template;
 
+	// Handles chat requests by sending the user's prompt to the OpenAI API and returning the response.
 	@GetMapping("/chat")
 	public String chat(@RequestParam("prompt") String prompt) {
 		ChatGPTRequest request = new ChatGPTRequest(model, prompt);

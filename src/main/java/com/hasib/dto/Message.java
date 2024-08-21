@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.Objects;
 
+//Data Transfer Object (DTO) representing a message sent to or received from the OpenAI API.
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
