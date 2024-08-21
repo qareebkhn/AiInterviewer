@@ -104,7 +104,7 @@ The AI Interviewer application is designed to simulate interview scenarios tailo
 6. **View your results** after completing the interview. The results are automatically saved for future reference.
 
 ## Acknowledgments
-A big thank you to Interviewsby.ai for their impressive UI design, which inspired our job description, questions, and summary pages.
+A big thank you to [Interviewsby.ai](https://interviewsby.ai/) for their impressive UI design, which inspired our job description, questions, and summary pages.
 Thanks to **Jake Rosenthal** and **Chloe Pappas** for their excellent work!
 
 ## Contributing
