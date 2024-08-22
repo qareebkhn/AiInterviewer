@@ -110,3 +110,8 @@ Thanks to **Jake Rosenthal** and **Chloe Pappas** for their excellent work!
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+
+## Images
+![Main Page](./Main%20Page.jpg)
+![Step by Step Pages](./step%20by%20step%20page.jpg)
+
